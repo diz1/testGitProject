@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { SearchService } from "../../services/search.service";
-import { takeUntil } from "rxjs/operators";
-import { Subject } from "rxjs";
+import { IGetRepoParams } from "../../interfaces/github.interface";
 
 @Component({
   selector: 'app-profile',
@@ -10,30 +9,19 @@ import { Subject } from "rxjs";
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
-  componentDestroyed$ = new Subject()
-  commits: any = []
-  loading = true
 
   constructor(
     private route: ActivatedRoute,
-    private searchService: SearchService
+    public searchService: SearchService
   ) { }
 
   ngOnInit(): void {
-    const params = (this.route.snapshot.params as { owner: string, repo: string })
+    const params = (this.route.snapshot.params as IGetRepoParams)
+    const currentRepo = this.searchService.currentRepo$.value
 
-    this.searchService.getRepoCommits(params)
-      .pipe(takeUntil(this.componentDestroyed$))
-      .subscribe(
-        commits => {
-          this.commits = commits
-          this.loading = false
-        }
-      )
-  }
-
-  ngOnDestroy(): void {
-    this.componentDestroyed$.next()
-    this.componentDestroyed$.complete()
+    if (params.owner !== currentRepo?.owner?.login || params.repo !== currentRepo?.name) {
+      this.searchService.getRepo(params)
+      this.searchService.getRepoPulls(params)
+    }
   }
 }

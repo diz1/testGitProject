@@ -1,36 +1,53 @@
-<div class="home">
-  <div class="home__search">
-    <app-search-input (search)="searchRepos({ q: $event })"></app-search-input>
-  </div>
+<div class="container">
+  <div class="home">
+    <div class="home__search">
+      <app-search-input (search)="onSearchQueryChanged($event)"></app-search-input>
+    </div>
 
-  <div class="home__filters">
-    <app-filter (filterChanged)="searchRepos($event)"></app-filter>
-  </div>
+    <div class="home__filters">
+      <app-filter (filter)="onFilterChange($event)"></app-filter>
+    </div>
 
-  <div *ngIf="cards.value.length && !loading" class="home__cards">
-    <a [routerLink]="['profile', item.owner.login, item.name]" class="home__cards-item" *ngFor="let item of cards | async">
-      <app-card [card]="item"></app-card>
-    </a>
-  </div>
+    <div *ngIf="searchService.repos$ | async as repos; else loading" class="home__cards">
+      <span *ngIf="!repos.length; else pagination" class="home__cards-nothing">Nothing found</span>
 
-  <div *ngIf="cards.value.length && !loading" class="home__help home__help--pagination">
-    <mat-paginator [length]="totalItems"
-                   [pageSizeOptions]="[30, 50, 100]"
-                   (page)="searchRepos({ per_page: $event.pageSize, page: $event.pageIndex + 1 })"
-                   [pageIndex]="currentPage - 1"
-                   [pageSize]="itemsPerPage"
-                   aria-label="Select page"
-    ></mat-paginator>
-  </div>
+      <ng-template #pagination>
+        <ng-container *ngIf="searchService.searchParams$ | async as searchParams">
+          <mat-paginator [length]="searchService.totalItems$ | async"
+                         class="home__cards-paginator"
+                         [pageSizeOptions]="[30, 50, 100]"
+                         [pageIndex]="(searchParams.page ?? 0) - 1"
+                         [pageSize]="(searchParams.per_page ?? 30)"
+                         (page)="onPaginationChange($event)"
+                         aria-label="Select page"
+          ></mat-paginator>
+        </ng-container>
+      </ng-template>
 
-  <div *ngIf="!cards.value.length && !loading" class="home__help">
-    <span>Nothing found</span>
-  </div>
+      <a [routerLink]="['profile', repo.owner?.login, repo.name]" class="home__cards-item" *ngFor="let repo of repos">
+        <mat-card class="card">
+          <mat-card-title-group>
+            <mat-card-title>{{ repo.name }}</mat-card-title>
 
-  <div *ngIf="loading" class="home__help home__help--spinner">
-    <mat-progress-spinner
-      [color]="'accent'"
-      [mode]="'indeterminate'">
-    </mat-progress-spinner>
+            <mat-card-subtitle>{{ repo.full_name }}<br>forks: {{ repo.forks_count}}<br>watchers: {{ repo.watchers }}</mat-card-subtitle>
+
+            <img mat-card-md-image [src]="repo.owner?.avatar_url" alt="avatar">
+          </mat-card-title-group>
+
+          <mat-card-content>
+            {{ repo.description }}
+          </mat-card-content>
+        </mat-card>
+      </a>
+    </div>
+
+    <ng-template #loading>
+      <div class="home__help home__help--spinner">
+        <mat-progress-spinner
+          [color]="'accent'"
+          [mode]="'indeterminate'">
+        </mat-progress-spinner>
+      </div>
+    </ng-template>
   </div>
 </div>

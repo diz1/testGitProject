@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { MatSelectChange } from "@angular/material/select";
+import { IGetReposSearchParams } from "../../interfaces/github.interface";
+import {SearchService} from "../../services/search.service";
 
 @Component({
   selector: 'app-filter',
@@ -7,7 +9,8 @@ import { MatSelectChange } from "@angular/material/select";
   styleUrls: ['./filter.component.scss']
 })
 export class FilterComponent {
-  @Output() filterChanged: EventEmitter<any> = new EventEmitter<any>()
+  @Output() filter: EventEmitter<IGetReposSearchParams> = new EventEmitter<IGetReposSearchParams>()
+
   sortItems = [
     {
       value: 'stars',
@@ -37,9 +40,9 @@ export class FilterComponent {
     }
   ]
 
-  constructor() { }
+  constructor(public searchService: SearchService) { }
 
   changeFilter(event: MatSelectChange, type: string) {
-    this.filterChanged.emit({ [type]: event.value })
+    this.filter.emit({ q: '', [type]: event.value })
   }
 }

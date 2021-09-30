@@ -8,7 +8,7 @@ import { Observable } from "rxjs";
 export class ApiService {
   apiRootUrl = 'https://api.github.com/'
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) {}
 
   get(url: string, paramsObj?: { [key: string]: any }, headersObj?: { [key: string]: any }): Observable<any> {
     let headers = new HttpHeaders();

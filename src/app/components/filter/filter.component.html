@@ -9,10 +9,10 @@
     </mat-select>
   </mat-form-field>
 
-  <mat-form-field class="filter__item" appearance="outline">
+  <mat-form-field class="filter__item" appearance="outline" *ngIf="searchService.searchParams$ | async as searchParams">
     <mat-label>Order</mat-label>
 
-    <mat-select (selectionChange)="changeFilter($event, 'order')">
+    <mat-select (selectionChange)="changeFilter($event, 'order')" [disabled]="!searchParams.sort">
       <mat-option *ngFor="let order of orderItems" [value]="order.value">
         {{ order.viewValue }}
       </mat-option>

@@ -1,6 +1,6 @@
-import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subject } from "rxjs";
-import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
+import { FormControl, FormGroup } from "@angular/forms";
 import { debounceTime, takeUntil } from "rxjs/operators";
 
 @Component({
@@ -9,19 +9,17 @@ import { debounceTime, takeUntil } from "rxjs/operators";
   styleUrls: ['./search-input.component.scss']
 })
 export class SearchInputComponent implements OnInit, OnDestroy {
-  form: FormGroup | any
+  @Output() search: EventEmitter<string> = new EventEmitter<string>()
+  form: FormGroup = new FormGroup({
+    search: new FormControl('angular')
+  })
   componentDestroyed$ = new Subject()
-  @Output() search: EventEmitter<string> = new EventEmitter()
 
-  constructor(private fb: FormBuilder) { }
+  constructor() { }
 
   ngOnInit(): void {
-    this.form = this.fb.group({
-      search: new FormControl('')
-    })
-
-    this.form?.controls.search.valueChanges
-      .pipe(debounceTime(300), takeUntil(this.componentDestroyed$))
+    (this.form.controls.search as FormControl).valueChanges
+      .pipe(debounceTime(350), takeUntil(this.componentDestroyed$))
       .subscribe(
         (val: string) => {
           this.search.emit(val)
@@ -30,7 +28,7 @@ export class SearchInputComponent implements OnInit, OnDestroy {
   }
 
   clearForm(): void {
-    (this.form?.controls.search as FormControl).reset('')
+    (this.form.controls.search as FormControl).reset('')
   }
 
   ngOnDestroy(): void {

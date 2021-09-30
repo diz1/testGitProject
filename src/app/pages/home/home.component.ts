@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {BehaviorSubject, Subject} from "rxjs";
 import { SearchService } from "../../services/search.service";
-import {takeUntil} from "rxjs/operators";
+import { IGetReposSearchParams } from "../../interfaces/github.interface";
+import { PageEvent } from "@angular/material/paginator";
 
 @Component({
   selector: 'app-home',
@@ -9,40 +9,40 @@ import {takeUntil} from "rxjs/operators";
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  componentDestroyed$ = new Subject()
-  cards = new BehaviorSubject<Array<any>>([])
-  currentPage = 1
-  itemsPerPage = 30
-  totalItems = 0
-  loading = false
 
-  constructor(private searchService: SearchService) {}
+  constructor(public searchService: SearchService) {}
 
   ngOnInit(): void {
-    this.searchRepos()
+    if (!this.searchService.repos$.value) {
+      this.searchService.searchRepos()
+    }
   }
 
-  searchRepos(params: any = { q: '' }): void {
-    this.loading = true
-    this.itemsPerPage = params.per_page ?? 30
-    this.currentPage = params.page ?? 0
+  onSearchQueryChanged(query: string) {
+    if (!query) return
+
+    const params: IGetReposSearchParams = {
+      q: query
+    }
+
     this.searchService.searchRepos(params)
-      .pipe(takeUntil(this.componentDestroyed$))
-      .subscribe(
-        response => {
-          if (response.items) {
-            this.cards.next(response.items)
-            this.totalItems = Math.floor(response.total_count / this.itemsPerPage)
-          } else if (response instanceof Array) {
-            this.cards.next(response)
-          }
-          this.loading = false
-        }
-      )
   }
 
-  ngOnDestroy(): void {
-    this.componentDestroyed$.next()
-    this.componentDestroyed$.complete()
+  onFilterChange(evt: IGetReposSearchParams) {
+    const params: IGetReposSearchParams = {
+      ...evt
+    }
+
+    this.searchService.searchRepos(params)
+  }
+
+  onPaginationChange(event: PageEvent): void {
+    const params: IGetReposSearchParams = {
+      q: '',
+      page: event.pageIndex + 1,
+      per_page: event.pageSize
+    }
+
+    this.searchService.searchRepos(params)
   }
 }

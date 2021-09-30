@@ -1,28 +1,85 @@
-<div *ngIf="!loading" class="profile">
-  <mat-card class="profile__card" *ngFor="let commit of commits">
-    <mat-card-header>
-      <img *ngIf="commit.author" mat-card-avatar [src]="commit.author.avatar_url" alt="avatar">
-      <img *ngIf="!commit.author" mat-card-avatar src="https://raw.githubusercontent.com/github/explore/0a84ca418425da147e4e43b1c74aa169d3265870/topics/bot/bot.png" alt="avatar">
+<div class="container">
 
-      <mat-card-title>{{ commit.commit.author.name }}</mat-card-title>
+  <div class="profile" *ngIf="searchService.currentRepo$ | async as currentRepo; else loader">
+    <mat-card>
+      <mat-toolbar>
+        <button mat-icon-button aria-label="Go backward" [routerLink]="['/']">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
 
-      <mat-card-subtitle>{{ commit.commit.author.email }}</mat-card-subtitle>
-    </mat-card-header>
+        <a [href]="currentRepo.homepage || '#'" style="font-size: 24px; margin: 0 8px;" mat-stroked-button aria-label="Go main site">
+          {{ currentRepo.name }}
+        </a>
 
-    <mat-card-content>
-      <p class="mat-slider-thumb-label-text">{{ commit.commit.author.date | date: "dd.MM.yyyy" }}</p>
-      <p>{{ commit.commit.message }}</p>
-    </mat-card-content>
+        <span style="font-size: 14px; color: #8f8f8f">{{ currentRepo.updated_at | date: "dd.MM.yyyy hh:mm:ss"}}</span>
 
-    <mat-card-actions class="profile__card-actions">
-      <a [href]="commit.html_url" mat-raised-button color="primary">View on github</a>
-    </mat-card-actions>
-  </mat-card>
-</div>
+        <span class="spacer"></span>
 
-<div *ngIf="loading" class="profile-spinner">
-  <mat-progress-spinner
-    [color]="'accent'"
-    [mode]="'indeterminate'">
-  </mat-progress-spinner>
+        <button style="margin-left: 8px;" mat-button class="example-icon" aria-label="Example icon-button with share icon">
+          <mat-icon>visibility</mat-icon>
+          {{ currentRepo.subscribers_count }}
+        </button>
+
+        <button style="margin-left: 8px;" mat-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+          <mat-icon>star</mat-icon>
+          {{ currentRepo.watchers_count }}
+        </button>
+
+        <button style="margin-left: 8px;" mat-button class="example-icon" aria-label="Example icon-button with share icon">
+          <mat-icon>device_hub</mat-icon>
+          {{ currentRepo.network_count }}
+        </button>
+      </mat-toolbar>
+
+      <mat-card-title style="margin: 12px 0">
+        <mat-card-subtitle>
+          <a mat-stroked-button [href]="currentRepo.html_url">{{ currentRepo.full_name }}</a>
+        </mat-card-subtitle>
+      </mat-card-title>
+
+      <mat-card-header>
+        <img style="margin: 0 auto" mat-card-lg-image [src]="currentRepo.owner?.avatar_url || 'https://docs.github.com/assets/images/gundamcat.png'" alt="avatar">
+      </mat-card-header>
+
+      <mat-card-content>
+        <mat-card-title style="text-align: center; margin: 12px 0">{{ currentRepo.description }}</mat-card-title>
+
+        <mat-list *ngIf="searchService.currentRepoPulls$ | async as repoPulls; else loader">
+          <div mat-subheader>Pull requests</div>
+
+          <mat-divider></mat-divider>
+
+          <mat-list-item *ngFor="let pull of repoPulls">
+            <mat-icon mat-list-icon>call_merge</mat-icon>
+
+            <div mat-line style="font-weight: 500">{{ pull.title }}</div>
+
+            <div mat-line style="color: #939393">
+              #{{ pull.number }},
+              state: {{ pull.state }},
+              created: {{ pull.created_at | date: "dd.mm.yyyy hh:mm" }},
+              updated: {{ pull.updated_at | date: "dd.mm.yyyy hh:mm" }}
+            </div>
+
+            <mat-chip-list mat-line aria-label="Fish selection">
+              <mat-chip *ngFor="let label of pull.labels" [style]="'background-color: #' + label.color + ';'">{{ label.name }}</mat-chip>
+            </mat-chip-list>
+          </mat-list-item>
+
+          <mat-list-item *ngIf="!repoPulls.length">
+            <div mat-line style="color: #9f9f9f; text-align: center">Nothing found here...</div>
+          </mat-list-item>
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <ng-template #loader>
+    <div class="profile-spinner">
+      <mat-progress-spinner
+        [color]="'accent'"
+        [mode]="'indeterminate'">
+      </mat-progress-spinner>
+    </div>
+  </ng-template>
 </div>

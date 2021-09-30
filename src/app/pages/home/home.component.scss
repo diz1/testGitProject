@@ -13,22 +13,21 @@
 
   &__search {
     grid-area: search;
-    width: 30%;
+    width: 50%;
   }
 
   &__filters {
     grid-area: filter;
-    width: 30%;
+    width: 50%;
   }
 
   &__cards {
     grid-area: cards;
     display: grid;
-    grid-template-columns: repeat(3, auto);
+    grid-template-columns: repeat(3, 1fr);
     justify-items: center;
     gap: 24px;
 
-    padding: 0 300px;
     width: 100%;
 
     &-item {
@@ -48,6 +47,11 @@
         transform: translateZ(3px)
       }
     }
+
+    &-paginator {
+      grid-column: 1 / 4;
+      justify-self: end;
+    }
   }
 
   &__help {
@@ -66,4 +70,8 @@
       padding: 12px 300px;
     }
   }
+}
+
+.card {
+  height: 100%;
 }

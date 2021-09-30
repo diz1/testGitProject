@@ -4,7 +4,7 @@
 
     <input matInput type="text" formControlName="search">
 
-    <button *ngIf="form?.value.search" matSuffix mat-icon-button aria-label="Clear" (click)="clearForm()">
+    <button *ngIf="form.value.search" matSuffix mat-icon-button aria-label="Clear" (click)="clearForm()">
       <mat-icon>close</mat-icon>
     </button>
   </mat-form-field>
