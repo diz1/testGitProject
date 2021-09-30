@@ -1,21 +1,18 @@
-import {Injectable, OnDestroy} from '@angular/core';
-import {BehaviorSubject, Subject} from "rxjs";
+import { Injectable} from '@angular/core';
+import { BehaviorSubject } from "rxjs";
 import { ApiService } from "./api.service";
 import {
   IGetRepoParams, IGetRepoPullsResponse,
-  IGetRepoResponse,
-  IGetReposResponse,
+  IGetRepoResponse, IGetReposResponse,
   IGetReposSearchParams
 } from "../interfaces/github.interface";
 import { trimObj } from "../utils/object.util";
-import { takeUntil } from "rxjs/operators";
 import { IReposItem } from "../interfaces/github.interface";
 
 @Injectable({
   providedIn: 'root'
 })
-export class SearchService implements OnDestroy{
-  private serviceDestroyed$ = new Subject()
+export class SearchService {
   private _currentRepo$ = new BehaviorSubject<IReposItem | null>(null)
   private _currentRepoPulls$ = new BehaviorSubject<IGetRepoPullsResponse[] | null>(null)
   private _repos$ = new BehaviorSubject<IReposItem[] | null>(null)
@@ -43,7 +40,6 @@ export class SearchService implements OnDestroy{
     })
 
     this.api.get('search/repositories', this._searchParams$.value)
-      .pipe(takeUntil(this.serviceDestroyed$))
       .subscribe({
         next: (response: IGetReposResponse) => {
           this._repos$.next(response.items as IReposItem[])
@@ -56,7 +52,6 @@ export class SearchService implements OnDestroy{
     this._currentRepo$.next(null)
 
     this.api.get(`repos/${params.owner}/${params.repo}`)
-      .pipe(takeUntil(this.serviceDestroyed$))
       .subscribe({
         next: (response: IGetRepoResponse) => {
           this._currentRepo$.next(response as IReposItem)
@@ -68,16 +63,10 @@ export class SearchService implements OnDestroy{
     this._currentRepoPulls$.next(null)
 
     this.api.get(`repos/${params.owner}/${params.repo}/pulls`)
-      .pipe(takeUntil(this.serviceDestroyed$))
       .subscribe({
         next: (response: IGetRepoPullsResponse[]) => {
           this._currentRepoPulls$.next(response as IGetRepoPullsResponse[])
         }
       })
-  }
-
-  ngOnDestroy(): void {
-    this.serviceDestroyed$.next()
-    this.serviceDestroyed$.complete()
   }
 }
