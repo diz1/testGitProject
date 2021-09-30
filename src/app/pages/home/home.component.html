@@ -1,0 +1,36 @@
+<div class="home">
+  <div class="home__search">
+    <app-search-input (search)="searchRepos({ q: $event })"></app-search-input>
+  </div>
+
+  <div class="home__filters">
+    <app-filter (filterChanged)="searchRepos($event)"></app-filter>
+  </div>
+
+  <div *ngIf="cards.value.length && !loading" class="home__cards">
+    <a [routerLink]="['profile', item.owner.login, item.name]" class="home__cards-item" *ngFor="let item of cards | async">
+      <app-card [card]="item"></app-card>
+    </a>
+  </div>
+
+  <div *ngIf="cards.value.length && !loading" class="home__help home__help--pagination">
+    <mat-paginator [length]="totalItems"
+                   [pageSizeOptions]="[30, 50, 100]"
+                   (page)="searchRepos({ per_page: $event.pageSize, page: $event.pageIndex + 1 })"
+                   [pageIndex]="currentPage - 1"
+                   [pageSize]="itemsPerPage"
+                   aria-label="Select page"
+    ></mat-paginator>
+  </div>
+
+  <div *ngIf="!cards.value.length && !loading" class="home__help">
+    <span>Nothing found</span>
+  </div>
+
+  <div *ngIf="loading" class="home__help home__help--spinner">
+    <mat-progress-spinner
+      [color]="'accent'"
+      [mode]="'indeterminate'">
+    </mat-progress-spinner>
+  </div>
+</div>

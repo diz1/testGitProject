@@ -1,0 +1,21 @@
+<div class="filter">
+  <mat-form-field class="filter__item" appearance="outline">
+    <mat-label>Sort</mat-label>
+
+    <mat-select (selectionChange)="changeFilter($event, 'sort')">
+      <mat-option *ngFor="let sort of sortItems" [value]="sort.value">
+        {{ sort.viewValue }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field class="filter__item" appearance="outline">
+    <mat-label>Order</mat-label>
+
+    <mat-select (selectionChange)="changeFilter($event, 'order')">
+      <mat-option *ngFor="let order of orderItems" [value]="order.value">
+        {{ order.viewValue }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>

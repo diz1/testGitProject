@@ -1,0 +1,11 @@
+<form [formGroup]="form">
+  <mat-form-field class="search-form-field" appearance="outline" >
+    <mat-label>Search repos in github...</mat-label>
+
+    <input matInput type="text" formControlName="search">
+
+    <button *ngIf="form?.value.search" matSuffix mat-icon-button aria-label="Clear" (click)="clearForm()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+</form>

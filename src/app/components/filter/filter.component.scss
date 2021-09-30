@@ -1,0 +1,9 @@
+.filter {
+  display: grid;
+  gap: 30px;
+  grid-template-columns: repeat(2, 1fr);
+
+  &__item {
+    width: 100%;
+  }
+}

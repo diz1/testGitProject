@@ -1,0 +1,28 @@
+<div *ngIf="!loading" class="profile">
+  <mat-card class="profile__card" *ngFor="let commit of commits">
+    <mat-card-header>
+      <img *ngIf="commit.author" mat-card-avatar [src]="commit.author.avatar_url" alt="avatar">
+      <img *ngIf="!commit.author" mat-card-avatar src="https://raw.githubusercontent.com/github/explore/0a84ca418425da147e4e43b1c74aa169d3265870/topics/bot/bot.png" alt="avatar">
+
+      <mat-card-title>{{ commit.commit.author.name }}</mat-card-title>
+
+      <mat-card-subtitle>{{ commit.commit.author.email }}</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <p class="mat-slider-thumb-label-text">{{ commit.commit.author.date | date: "dd.MM.yyyy" }}</p>
+      <p>{{ commit.commit.message }}</p>
+    </mat-card-content>
+
+    <mat-card-actions class="profile__card-actions">
+      <a [href]="commit.html_url" mat-raised-button color="primary">View on github</a>
+    </mat-card-actions>
+  </mat-card>
+</div>
+
+<div *ngIf="loading" class="profile-spinner">
+  <mat-progress-spinner
+    [color]="'accent'"
+    [mode]="'indeterminate'">
+  </mat-progress-spinner>
+</div>
