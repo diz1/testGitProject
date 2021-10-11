@@ -234,8 +234,6 @@ export interface IGetRepoResponse {
   allow_rebase_merge?: boolean
   template_repository?: IGetRepoResponse
   temp_clone_token?: string
-  allow_squash_merge?: boolean
-  allow_auto_merge?: boolean
   delete_branch_on_merge?: boolean
   allow_merge_commit?: boolean
   subscribers_count?: number
