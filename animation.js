@@ -443,9 +443,7 @@ class ParticlesComponent {
 	}
 
 	readyInit() {
-		this.isActive$.pipe(filter(flag => flag), first(), tap(val => {
-			console.log("val", val);
-		})).subscribe(() => this.init());
+		this.isActive$.pipe(filter(flag => flag), first()).subscribe(() => this.init());
 		this.defineSize();
 		this.defineRect();
 		this.defineIsActive();
@@ -752,10 +750,3 @@ class ParticlesComponent {
 		return current;
 	}
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-  const host = document.getElementById('particles')
-  const canvas = document.getElementById('canvas')
-	const component = new ParticlesComponent(canvas, host)
-	console.log("compo", component);
-})
