@@ -626,6 +626,9 @@ class ParticlesComponent {
 	defineSize() {
 		this.canvasWidth = this.canvas.width = this.hostElem.clientWidth * this.increase;
 		this.canvasHeight = this.canvas.height = this.hostElem.clientHeight * this.increase;
+    console.log('this.hostElem', this.hostElem)
+    console.log('this.hostElem.clientWidth', this.hostElem.clientWidth)
+    console.log('this.hostElem.clientHeight', this.hostElem.clientHeight)
 	}
 
 	defineRect() {
