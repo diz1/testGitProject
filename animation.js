@@ -286,92 +286,7 @@ class ParticlesComponent {
 	componentDestroyed$ = new Subject();
 	isInitialed = false;
 
-	settings = {
-		particlesIntensityInPercentSmall: [
-			{ bp: 0, st: 60 },
-			{ bp: BREAKPOINTS.small, st: 70 },
-			{ bp: BREAKPOINTS.wide, st: 80 }
-		],
-		excludeGridCellsInRowSmall: [
-			{
-				bp: BREAKPOINTS.wide,
-				st: [
-					{ row: 0, cells: [-1] },
-					{ row: 1, cells: [-1] },
-					{ row: 2, cells: [-1] },
-					{ row: 3, cellsDiff: [{ from: 0, to: 6 }] },
-					{ row: 4, cellsDiff: [{ from: 0, to: 4 }] },
-					{ row: 5, cellsDiff: [{ from: 0, to: 2 }] },
-					{ row: 6, cells: [0, 9] },
-					{ row: 7, cells: [0], cellsDiff: [{ from: 8, to: -1 }] },
-					{ row: 8, cells: [0], cellsDiff: [{ from: 6, to: -1 }] },
-					{ row: 9, cellsDiff: [{ from: 0, to: 3 }, { from: 5, to: -1 }] },
-				]
-			},
-			{
-				bp: BREAKPOINTS.small,
-				st: [
-					{ row: 0, cells: [-1] },
-					{ row: 1, cells: [-1] },
-					{ row: 2, cellsDiff: [{ from: 0, to: 5 }] },
-					{ row: 3, cellsDiff: [{ from: 0, to: 4 }] },
-					{ row: 4, cellsDiff: [{ from: 0, to: 2 }] },
-					{ row: 5, cells: [0] },
-					{ row: 6, cells: [0] },
-					{ row: 7, cells: [0, 1, 7] },
-					{ row: 8, cellsDiff: [{ from: 0, to: 3 }, { from: 6, to: 7 }] },
-					{ row: 9, cells: [-1] },
-				]
-			},
-			{
-				bp: 0,
-				st: [
-					{ row: 0, cells: [-1] },
-					{ row: 1, cellsDiff: [{ from: 0, to: 3 }] },
-					{ row: 2, cellsDiff: [{ from: 0, to: 3 }] },
-					{ row: 3, cellsDiff: [{ from: 0, to: 3 }] },
-					{ row: 4, cellsDiff: [{ from: 0, to: 4 }] },
-					{ row: 5, cellsDiff: [{ from: 0, to: 4 }] },
-					{ row: 6, cellsDiff: [{ from: 0, to: 3 }] },
-					{ row: 7, cellsDiff: [{ from: 0, to: 3 }] },
-					{ row: 8, cellsDiff: [{ from: 0, to: 4 }] },
-					{ row: 9, cells: [-1] },
-				]
-			},
-		],
-		excludeGridCellsInRowBig: [
-			{
-				bp: BREAKPOINTS.wide,
-				st: [
-					{ row: 0, cellsDiff: [{ from: 0, to: 3 }] },
-					{ row: 1, cellsDiff: [{ from: 0, to: 3 }] },
-					{ row: 2, cells: [5], cellsDiff: [{ from: 0, to: 2 }] },
-					{ row: 3, cells: [0] },
-					{ row: 5, cells: [0, 5] },
-				]
-			},
-			{
-				bp: BREAKPOINTS.small,
-				st: [
-					{ row: 0, cellsDiff: [{ from: 0, to: 2 }] },
-					{ row: 1, cellsDiff: [{ from: 0, to: 2 }] },
-					{ row: 2, cellsDiff: [{ from: 0, to: 2 }] },
-					{ row: 3, cells: [0] },
-					{ row: 5, cells: [0, 4, 5] },
-				]
-			},
-			{
-				bp: 0,
-				st: [
-					{ row: 0, cells: [0] },
-					{ row: 2, cellsDiff: [{ from: 0, to: 2 }] },
-					{ row: 3, cellsDiff: [{ from: 0, to: 1 }] },
-					{ row: 4, cellsDiff: [{ from: 0, to: 1 }] },
-					{ row: 5, cellsDiff: [{ from: 0, to: 1 }] },
-				]
-			}
-		]
-	};
+	settings;
 	canvasRect;
 	ctx;
 	gridArr = {
@@ -429,7 +344,7 @@ class ParticlesComponent {
 		this.hostElem = host
 		this.canvas = canvas
 		this.ctx = this.canvas.getContext('2d');
-    this.settings = settings || this.settings
+    this.settings = settings
 
 		this.canvas.style.transform = 'scale(' + 1 / this.increase + ')'
 		this.canvas.style.top = 100 / this.increase - 100 + '%'
